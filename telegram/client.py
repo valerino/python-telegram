@@ -23,6 +23,7 @@ from typing import (
     Optional,
     DefaultDict,
 )
+from pathlib import Path
 from collections import defaultdict
 
 from telegram import VERSION
@@ -66,7 +67,7 @@ class Telegram:
         bot_token: Optional[str] = None,
         library_path: Optional[str] = None,
         worker: Optional[Type[BaseWorker]] = None,
-        files_directory: Optional[str] = None,
+        files_directory: Optional[Union[str, Path]] = None,
         use_test_dc: bool = False,
         use_message_database: bool = True,
         device_model: str = 'python-telegram',
@@ -123,7 +124,7 @@ class Telegram:
             # self._database_encryption_key = database_encryption_key
             if isinstance(self._database_encryption_key, str):
                 self._database_encryption_key = self._database_encryption_key.encode()
-                
+
             self._database_encryption_key = base64.b64encode(self._database_encryption_key).decode()
 
         if not files_directory:
@@ -138,7 +139,7 @@ class Telegram:
                 os.makedirs(os.path.abspath(files_directory))
             except:
                 pass
-            
+
         self.files_directory = files_directory
 
         self._authorized = False
@@ -654,7 +655,6 @@ class Telegram:
             signal.SIGINT,
             signal.SIGTERM,
             signal.SIGABRT,
-            signal.SIGQUIT,
         ),
     ) -> None:
         """
@@ -774,9 +774,9 @@ class Telegram:
             'system_version': self.system_version,
             'application_version': self.application_version,
             'system_language_code': self.system_language_code,
-            'database_directory': os.path.join(self.files_directory, 'database'),
+            'database_directory': os.path.join(self.files_directory, "database"),
             'use_message_database': self.use_message_database,
-            'files_directory': os.path.join(self.files_directory, 'files'),
+            'files_directory': os.path.join(self.files_directory, "files"),
             'use_secret_chats': self.use_secret_chats,
         }
         if self._database_encryption_key is not None:
@@ -793,7 +793,7 @@ class Telegram:
                 'parameters': parameters,
                 **parameters,
             }
-            
+
         return self._send_data(data, result_id='updateAuthorizationState')
 
     def _send_encryption_key(self) -> AsyncResult:
