@@ -160,3 +160,37 @@ class CreateSupergroupChat(Object):
         _id = Object.read(q.get('supergroup_id'))
         _force = Object.read(q.get('force'))
         return CreateSupergroupChat(_id, _force)
+
+class DownloadFile(Object):
+    ID = "downloadFile"
+
+    def __init__(self, file_id: int, priority: int=32, offset: int=0, limit: int=0, synchronous: bool=True, extra=None, **kwargs):
+        self.extra = extra
+        self.file_id = file_id
+        self.priority = priority
+        self.offset = offset
+        self.limit = limit
+        self.synchronous = synchronous
+
+    @staticmethod
+    def read(q: dict, *args) -> "DownloadFile":
+        _id = Object.read(q.get('file_id'))
+        _priority = Object.read(q.get('priority'))
+        _offset = Object.read(q.get('offset'))
+        _limit = Object.read(q.get('limit'))
+        _synchronous = Object.read(q.get('synchronous'))
+        return DownloadFile(_id, _priority, _offset, _limit, _synchronous)
+
+class GetRemoteFile(Object):
+    ID = "getRemoteFile"
+
+    def __init__(self, remote_file_id: str, file_type=None, extra=None, **kwargs):
+        self.extra = extra
+        self.remote_file_id = remote_file_id
+        self.file_type = file_type
+
+    @staticmethod
+    def read(q: dict, *args) -> "GetRemoteFile":
+        _id = Object.read(q.get('remote_file_id'))
+        _file_type = Object.read(q.get('file_type'))
+        return GetRemoteFile(_id, _file_type)
